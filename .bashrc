@@ -17,7 +17,7 @@ export MANPATH
 } # PATHS
 
 { # SCREEN: start screen automatically if this is a remote login
-if [ "${TERM: -8}" == "noscreen" ]
+if [ "${TERM:-8}" == "noscreen" ]
 then
   TERM="${TERM/noscreen/}"
   SCREEN_DISABLED=1
