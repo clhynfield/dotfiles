@@ -28,7 +28,8 @@ then
     if [ "$PS1" != "" \
          -a "${SCREEN_STARTED:-x}" == "x" ] \
        && hash screen >/dev/null 2>&1
-    then echo -ne "\033]1;$HOST${WINDOW:+/${STY#*.}#$WINDOW}\a"
+    then
+        echo -ne "\033]1;$HOST${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if [ "${SSH_TTY:-x}" == "x" ]
         then
@@ -70,6 +71,8 @@ termcapinfo xterm 'af=\033[3%dm'
 # allow ANSI background color change
 termcapinfo xterm 'ab=\033[4%dm'
 
+term xterm
+
 defscrollback 10000
 
 defutf8 on
@@ -95,6 +98,7 @@ setenv DISPLAY :0.0
 bind s width 132 42
 EOF_SCREENRC_LOCAL
         fi
+        cd
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
         exec screen -x -R $SCREEN_SESSION -c "$HOME"/$SCREEN_RC
         # normally, execution of this rc script ends here...
@@ -280,19 +284,6 @@ function _scp_completion() {
 complete -o default -F _ssh_completion ssh
 complete -o default -o nospace -F _scp_completion scp
 } # COMMANDS
-
-{ # CONFIGS: Configuring other environments
-
-# screen
-if [ ! -f "$HOME/.screenrc" ]; then
-    echo "term xterm"                                                 >  "$HOME/.screenrc"
-    echo "multiuser on"                                               >> "$HOME/.screenrc"
-    echo "startup_message off"                                        >> "$HOME/.screenrc"
-    echo "defscrollback 10000"                                        >> "$HOME/.screenrc"
-    echo "termcapinfo xterm 'hs:ts=\033]2;:fs=\007:ds=\033]2;screen\007'" >> "$HOME/.screenrc"
-fi
-
-} # CONFIGS
 
 _Cp=$'\033['
 _Ck="${_Cp}30m"
