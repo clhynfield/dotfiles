@@ -1,4 +1,5 @@
-BASHRC_VERSION=201104132333; export BASHRC_VERSION
+BASHRC_VERSION=200906251556; export BASHRC_VERSION
+
 { # PATHS
 PATH=\
 ~/bin:/usr/local/bin:/usr/xpg4/bin:/usr/bin:/bin:\
@@ -16,69 +17,57 @@ MANPATH=\
 export MANPATH
 } # PATHS
 
+LC_TYPE=en_US.UTF-8; export LC_TYPE
+
+if echo $- | grep i > /dev/null && [ -z "$CLHBASHRC" ]; then { # INTERACTIVE
+
+{ # EARLY
+#if [ -z "$HOST" ]; then HOST=`uname -n`; fi; HOST=${HOST%%.*}
+#HOST=$HOSTNAME; HOST=${HOST%%.*}; export HOST
+
+if [ -z "$BASH" -a -x /bin/bash ]; then # SWITCH TO BASH
+  exec /bin/bash
+  exec /bin/bash
+fi
+
+[ -r ${HOME}/.bashrc_local ] && . ${HOME}/.bashrc_local
+[ -r /sw/bin/init.sh       ] && . /sw/bin/init.sh
+} # EARLY
+
 { # SCREEN: start screen automatically if this is a remote login
-if [ "${TERM:-8}" == "noscreen" ]
+if [ "${TERM: -8}" == "noscreen" ]
 then
   TERM="${TERM/noscreen/}"
   SCREEN_DISABLED=1
 fi
 
-if [ "${SCREEN_DISABLED:-x}" == "x" ]
+if [ ${SCREEN_DISABLED:-x} = "x" ]
 then
-    if [ "$PS1" != "" \
-         -a "${SCREEN_STARTED:-x}" == "x" ] \
-       && hash screen >/dev/null 2>&1
+    if { [ "$PS1" != "" \
+         -a "${SCREEN_STARTED:-x}" == x ]; } \
+       && { hash screen &>/dev/null || ln -s screen_`uname -s | tr [A-Z] [a-z]` ${HOME}/bin/screen &>/dev/null; }
     then
-        echo -ne "\033]1;$HOST${WINDOW:+/${STY#*.}#$WINDOW}\a"
+        echo -ne "\e]1;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
-        if [ "${SSH_TTY:-x}" == "x" ]
-        then
-            export SCREEN_ESCAPE=$'\cxx'
-            export SCREEN_SESSION="local"
-            export SCREEN_WIDTH=132
-            export SCREEN_HEIGHT=42
-            export SCREEN_RC=".screenrc.local"
-        else
-            export SCREEN_ESCAPE=$'\caa'
-            export SCREEN_SESSION="ssh"
-            export SCREEN_WIDTH=132
-            export SCREEN_HEIGHT=41
-            export SCREEN_RC=".screenrc"
-        fi
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
         then
-            true
+            echo -n ""
         else
-            [ -r "$HOME"/.screenrc ] && cp "$HOME"/.screenrc "$HOME"/.screenrc.$BASHRC_VERSION # make backup
+            [ -r "$HOME"/.screenrc ] && cp "$HOME"/.screenrc "$HOME"/.screenrc.$BASHRC_VERSION
             cat <<EOF_SCREENRC > "$HOME"/.screenrc
 setenv SCREEN_RC_VERSION $BASHRC_VERSION
 setenv SCREEN_STARTED 1
 
-# allow terminal scrollback
-termcapinfo xterm 'ti@:te@'
-# allow hardstatus line in window title
-termcapinfo xterm 'hs:ts=\033]2;:fs=\007:ds=\033]2;screen\007'
-# allow escape codes to resize window
-termcapinfo xterm 'WS=\033[8;%d;%d;t'
-# allow mouse tracking, OSC
-termcapinfo xterm 'xt'
-# allow missing capabilities
-termcapinfo xterm 'tf'
-# allow ansi fg/bg color
-termcapinfo xterm 'ax'
-# allow ANSI foreground color change
-termcapinfo xterm 'af=\033[3%dm'
-# allow ANSI background color change
-termcapinfo xterm 'ab=\033[4%dm'
-
+termcapinfo xterm 'hs:xt:tf:ax:af=\E[3%dm:ts=\E]2;:fs=\007:ds=\E]2;screen\007:ti@:te@:WS=\E[8;%d;%d;t'
 term xterm
+hardstatus on
 
 defscrollback 10000
 
 defutf8 on
 caption always
 
-escape $SCREEN_ESCAPE
+escape \$SCREEN_ESCAPE
 
 shell /bin/bash
 
@@ -93,41 +82,35 @@ EOF_SCREENRC
             ( cat "$HOME"/.screenrc; cat <<"EOF_SCREENRC_LOCAL" ) > "$HOME"/.screenrc.local
 height $SCREEN_HEIGHT
 width $SCREEN_WIDTH
-hardstatus string "%n %h"
+hardstatus string $SCREEN_HARDSTATUS
 setenv DISPLAY :0.0
 bind s width 132 42
 EOF_SCREENRC_LOCAL
         fi
-        cd
+        if [ "${SSH_TTY:-x}" == "x" ]
+        then
+            export SCREEN_ESCAPE=$'\cxx'
+            export SCREEN_SESSION="local"
+            export SCREEN_HARDSTATUS="%n %h"
+            export SCREEN_WIDTH=132
+            export SCREEN_HEIGHT=42
+            export SCREEN_RC=".screenrc.local"
+        else
+            export SCREEN_ESCAPE=$'\caa'
+            export SCREEN_SESSION="ssh"
+            export SCREEN_HARDSTATUS="%h"
+            export SCREEN_WIDTH=132
+            export SCREEN_HEIGHT=41
+            export SCREEN_RC=".screenrc"
+        fi
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
-        exec screen -x -R $SCREEN_SESSION -c "$HOME"/$SCREEN_RC
+        exec screen -A -x -R $SCREEN_SESSION -c "$HOME"/$SCREEN_RC
         # normally, execution of this rc script ends here...
         echo "Screen failed; continuing with normal bash startup"
     fi
 fi
 }
 
-LC_TYPE=en_US.UTF-8; export LC_TYPE
-
-{ # LOCAL: Host-specific customizations
-#if [ -z "$HOST" ]; then HOST=`uname -n`; fi; HOST=${HOST%%.*}
-HOST=$HOSTNAME; HOST=${HOST%%.*}; export HOST
-
-test -r ${HOME}/.bashrc_local  && . ${HOME}/.bashrc_local
-test -r /sw/bin/init.sh        && . /sw/bin/init.sh
-} # LOCAL
-
-case "$-" in
-*i*) INTERACTIVE=1;;
-*)   unset INTERACTIVE;;
-esac
-
-if [ $INTERACTIVE ] && [ -z "$CLHBASHRC" ]; then # INTERACTIVE
-
-if [ -z "$BASH" ]; then # SWITCH TO BASH
-  exec /bin/bash
-  exec /bin/bash
-fi
 
 { # CONTROL: Make sure those control characters work as expected
 IGNOREEOF=0   # Control-D should let you exit the shell
@@ -151,16 +134,20 @@ set -o vi
 { # COLOR: Put a little color in your life
 CLICOLOR=true                  ; export CLICOLOR
 LSCOLORS=exfxcxdxbxegedabagacad; export LSCOLORS
-LESS_TERMCAP_mb=$'\033[01;31m'   ; export LESS_TERMCAP_mb
-LESS_TERMCAP_md=$'\033[01;31m'   ; export LESS_TERMCAP_md
-LESS_TERMCAP_me=$'\033[0m'       ; export LESS_TERMCAP_me
-LESS_TERMCAP_se=$'\033[0m'       ; export LESS_TERMCAP_se
-LESS_TERMCAP_so=$'\033[01;44;33m'; export LESS_TERMCAP_so
-LESS_TERMCAP_ue=$'\033[0m'       ; export LESS_TERMCAP_ue
-LESS_TERMCAP_us=$'\033[01;32m'   ; export LESS_TERMCAP_us
-if ls --color=tty > /dev/null 2>&1
+LESS_TERMCAP_mb=$'\E[01;31m'   ; export LESS_TERMCAP_mb
+LESS_TERMCAP_md=$'\E[01;31m'   ; export LESS_TERMCAP_md
+LESS_TERMCAP_me=$'\E[0m'       ; export LESS_TERMCAP_me
+LESS_TERMCAP_se=$'\E[0m'       ; export LESS_TERMCAP_se
+LESS_TERMCAP_so=$'\E[01;44;33m'; export LESS_TERMCAP_so
+LESS_TERMCAP_ue=$'\E[0m'       ; export LESS_TERMCAP_ue
+LESS_TERMCAP_us=$'\E[01;32m'   ; export LESS_TERMCAP_us
+if ls --color=tty &>/dev/null
 then
     alias ls="ls --color=tty"
+    DIRCOLORS=`type -p dircolors`
+    if [ -x "$DIRCOLORS" -a -r "${HOME}/.dircolors" ]; then
+        eval `"$DIRCOLORS" "${HOME}/.dircolors"`
+    fi
 fi
 } # COLOR
 
@@ -222,31 +209,22 @@ function forget { # Fire and forget: minimizes window, executes command, restore
     tfunk -I
 } # function forget
 
-# DEPRECATED 2009-10-26 Clayon Hynfield - due to extremely poor performance on Cygwin
 # Set up aliases for all known hosts, so that you can type just the
 # name of the host to ssh to it.  This in combination with keypair
 # authentication allows for some really quick work:
 # $ mcsmos01 grep failed /var/log/httpd/error_log | more
-# for FILE in "$HOME/.ssh/known_hosts" "$HOME/.ssh/known_hosts2"; do {
-#    if [ -r "$FILE" ]
-#    then
-#        for host in `awk '{print $1}' | tr , ' '`; do
-#        while read hosts dargle hargle woggle noffle zipple pookle doogle; do
-#            for host in ${hosts//,/ }; do
-#                if ! type -p $host; then
-#                    alias "$host"="ssh $host"
-#                fi
-#            done
-#            if ! type -p $i > /dev/null; then
-#                alias "$i"="ssh $i"
-#            fi
-#        while read hosts discard; do
-#            for host in ${hosts//,/ }; do
-#        done < "$FILE" >/dev/null
-#    fi
-#} done
+for FILE in "$HOME/.ssh/known_hosts" "$HOME/.ssh/known_hosts2"; do {
+    if [ -r "$FILE" ]
+    then
+        for i in `< "$FILE" awk '{print $1}' | tr , ' '`; do
+            if ! type -p $i > /dev/null; then
+                alias "$i"="ssh $i"
+            fi
+        done
+    fi
+} done
 
-function _ssh_completion() {
+function _ssh_completion {
     CUR="${COMP_WORDS[COMP_CWORD]}";
     COMPREPLY=( $(compgen -W "$(awk 'BEGIN { \
                                          i=0} \
@@ -263,7 +241,7 @@ function _ssh_completion() {
     return 0;
 }
 
-function _scp_completion() {
+function _scp_completion {
     CUR="${COMP_WORDS[COMP_CWORD]}";
     COMPREPLY=( $(compgen -W "$(awk 'BEGIN { \
                                          i=0} \
@@ -283,9 +261,23 @@ function _scp_completion() {
 
 complete -o default -F _ssh_completion ssh
 complete -o default -o nospace -F _scp_completion scp
+
 } # COMMANDS
 
-_Cp=$'\033['
+{ # CONFIGS: Configuring other environments
+
+# screen
+if [ ! -f "$HOME/.screenrc" ]; then
+    echo "term xterm"                                                 >  "$HOME/.screenrc"
+    echo "multiuser on"                                               >> "$HOME/.screenrc"
+    echo "startup_message off"                                        >> "$HOME/.screenrc"
+    echo "defscrollback 10000"                                        >> "$HOME/.screenrc"
+    echo "termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'" >> "$HOME/.screenrc"
+fi
+
+} # CONFIGS
+
+_Cp=$'\e['
 _Ck="${_Cp}30m"
 _Cr="${_Cp}31m"
 _Cg="${_Cp}32m"
@@ -358,7 +350,7 @@ function tfunk { # TFUNK: Crazy terminal stuff
                     cyan )        string="$string${_Cc}" ;;
                     white )       string="$string${_Cw}" ;;
                     * )           string="$string${_Cn}" ;; esac ;;
-            R | reset )           string="$string\033c" ;;
+            R | reset )           string="$string\ec" ;;
             h | height )
                 height="$OPTARG"
                 string="$string${_Cp}8;${height};${width}t" ;;
@@ -372,7 +364,7 @@ function tfunk { # TFUNK: Crazy terminal stuff
     # Default action is to reset the window and resize to 132x42
     if [ -z "$string" ]
     then
-        echo -ne "\033[8;42;132t\033[8;42;132\033c"
+        echo -ne "\e[8;42;132t\e[8;42;132\ec"
     else
         echo -ne "$string"
     fi
@@ -496,10 +488,8 @@ function getopt {
 
 { # PROMPT:
 
-
-SCREEN_TITLE="${WINDOW:+\033k$SCREEN_ESCAPE ${HOST}:\$PWD\033\\\\}"
-WINDOW_TITLE='\033]2;$HOST${WINDOW:+/${STY#*.}#$WINDOW}\a'
-   TAB_TITLE='\033]1;$HOST${WINDOW:+/${STY#*.}#$WINDOW}\a'
+SCREEN_TITLE="${WINDOW:+\ek$SCREEN_ESCAPE ${HOSTNAME}:\$PWD\e\\\\}"
+WINDOW_TITLE='\e]2;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\a'
 PROMPT_COMMAND="echo -ne \"$WINDOW_TITLE$SCREEN_TITLE\""
 export PROMPT_COMMAND
 
@@ -507,7 +497,7 @@ export PROMPT_COMMAND
 # $
 PS1="\
 \[\${_U[\$UID]:-$_Cb}\][\[$_Cn\]\
-\u@${HOST}:\W\
+\u@${HOSTNAME}:\W\
 \[\${_U[\$UID]:-$_Cb}\]]\[$_Cn\]\
 \[${_Cp}200C${_Cp}28D${_Cp}\${#?}D\]\
 \[\${_R[\$?]:-$_Cr}\](\[$_Cn\]\
@@ -523,8 +513,10 @@ PS2="> "
 
 } # PROMPT
 
-test -r ${HOME}/.profile_local && . ${HOME}/.profile_local
+{ # LATE
+[ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
+} # LATE
+
+} fi # INTERACTIVE
 
 CLHBASHRC=yes
-
-fi # INTERACTIVE
