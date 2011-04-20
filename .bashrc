@@ -1,6 +1,10 @@
+#pragma mark - BEGIN
+
 BASHRC_VERSION=200906251556; export BASHRC_VERSION
 
-{ # PATHS
+
+#pragma mark - PATHS
+
 PATH=\
 ~/bin:/usr/local/bin:/usr/xpg4/bin:/usr/bin:/bin:\
 /usr/ucb:/usr/ccs/bin:/usr/contrib/bin:/usr/games:\
@@ -15,15 +19,16 @@ MANPATH=\
 /usr/X11R6/man:/usr/openwin/man:\
 /usr/lang/man
 export MANPATH
-} # PATHS
+
 
 LC_TYPE=en_US.UTF-8; export LC_TYPE
 
-if echo $- | grep i > /dev/null && [ -z "$CLHBASHRC" ]; then { # INTERACTIVE
+[ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
+    
+[ ! -z "$CLHBASHRC" ] && return # Already sourced this file, no need to do it again.
 
-{ # EARLY
-#if [ -z "$HOST" ]; then HOST=`uname -n`; fi; HOST=${HOST%%.*}
-#HOST=$HOSTNAME; HOST=${HOST%%.*}; export HOST
+
+#pragma mark - EARLY
 
 if [ -z "$BASH" -a -x /bin/bash ]; then # SWITCH TO BASH
   exec /bin/bash
@@ -32,9 +37,11 @@ fi
 
 [ -r ${HOME}/.bashrc_local ] && . ${HOME}/.bashrc_local
 [ -r /sw/bin/init.sh       ] && . /sw/bin/init.sh
-} # EARLY
 
-{ # SCREEN: start screen automatically if this is a remote login
+
+#pragma mark - SCREEN
+# start screen automatically if this is a remote login
+
 if [ "${TERM: -8}" == "noscreen" ]
 then
   TERM="${TERM/noscreen/}"
@@ -109,29 +116,36 @@ EOF_SCREENRC_LOCAL
         echo "Screen failed; continuing with normal bash startup"
     fi
 fi
-}
 
 
-{ # CONTROL: Make sure those control characters work as expected
+#pragma mark - CONTROL
+# Make sure those control characters work as expected
+
 IGNOREEOF=0   # Control-D should let you exit the shell
 stty erase  # Backspace is backspace
 stty kill   # Control-U is kill (to beginning of line)
 stty intr   # Control-C is interrupt
 stty stop   # Control-Z is stop
-} # CONTROL
 
-{ # HISTORY: Never forget that command again!
+
+#pragma mark - HISTORY
+# Never forget that command again!
+
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTCONTROL=ignoredups
-} # HISTORY
 
-{ # VI: Emacs is a great operating system. Too bad it lacks a good editor
+
+#pragma mark - VI
+# Emacs is a great operating system. Too bad it lacks a good editor
+
 EDITOR=vi; export EDITOR
 set -o vi
-} # VI
 
-{ # COLOR: Put a little color in your life
+
+#pragma mark - COLOR
+# Put a little color in your life
+
 CLICOLOR=true                  ; export CLICOLOR
 LSCOLORS=exfxcxdxbxegedabagacad; export LSCOLORS
 LESS_TERMCAP_mb=$'\E[01;31m'   ; export LESS_TERMCAP_mb
@@ -149,9 +163,11 @@ then
         eval `"$DIRCOLORS" "${HOME}/.dircolors"`
     fi
 fi
-} # COLOR
 
-{ # DATE: ISO dates sort well
+
+#pragma mark - DATE
+# ISO dates sort well
+
 if [[ ( ${OSTYPE#linux-gnu} != $OSTYPE ) || ( ${OSTYPE#darwin} != $OSTYPE ) ]]
 then
     STRFTIME="%Y-%m-%dT%H:%M:%S%z"
@@ -160,9 +176,9 @@ else
 fi
 export STRFTIME
 alias isodate='date +"$STRFTIME"'
-} # DATE
 
-{ # COMMANDS:
+
+#pragma mark - COMMANDS:
 
 if [ -x /usr/bin/less ]; then
     PAGER=less
@@ -203,26 +219,12 @@ function rcount {
     ruby -ne 'BEGIN{$l=0};END{print $l.to_s+"\n"};($l+=$_.length)%1024>0||print($l.to_s,"\n")'
 }
 
-function forget { # Fire and forget: minimizes window, executes command, restores window
+# Fire and forget: minimizes window, executes command, restores window
+function forget {
     tfunk -i
     $@
     tfunk -I
 } # function forget
-
-# Set up aliases for all known hosts, so that you can type just the
-# name of the host to ssh to it.  This in combination with keypair
-# authentication allows for some really quick work:
-# $ mcsmos01 grep failed /var/log/httpd/error_log | more
-for FILE in "$HOME/.ssh/known_hosts" "$HOME/.ssh/known_hosts2"; do {
-    if [ -r "$FILE" ]
-    then
-        for i in `< "$FILE" awk '{print $1}' | tr , ' '`; do
-            if ! type -p $i > /dev/null; then
-                alias "$i"="ssh $i"
-            fi
-        done
-    fi
-} done
 
 function _ssh_completion {
     CUR="${COMP_WORDS[COMP_CWORD]}";
@@ -262,20 +264,8 @@ function _scp_completion {
 complete -o default -F _ssh_completion ssh
 complete -o default -o nospace -F _scp_completion scp
 
-} # COMMANDS
 
-{ # CONFIGS: Configuring other environments
-
-# screen
-if [ ! -f "$HOME/.screenrc" ]; then
-    echo "term xterm"                                                 >  "$HOME/.screenrc"
-    echo "multiuser on"                                               >> "$HOME/.screenrc"
-    echo "startup_message off"                                        >> "$HOME/.screenrc"
-    echo "defscrollback 10000"                                        >> "$HOME/.screenrc"
-    echo "termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'" >> "$HOME/.screenrc"
-fi
-
-} # CONFIGS
+#pragma mark - TITLES AND PROMPTS
 
 _Cp=$'\e['
 _Ck="${_Cp}30m"
@@ -290,7 +280,7 @@ _Cn="${_Cp}39m"
 _U[0]=$_Cr
 _R[0]=$_Cb
 
-function tfunk { # TFUNK: Crazy terminal stuff
+function tfunk {
     # Supported functions:
     # move cursor: up, down, left, right
     # window ops: iconify, deiconify, bottom, top, zoom, unzoom
@@ -371,8 +361,9 @@ function tfunk { # TFUNK: Crazy terminal stuff
 
 } # function tfunk
 
-{ # GETOPTX: Functions to parse long options in bash
-  # from http://nlp.cs.jhu.edu/~edrabek/utils/
+#pragma mark - GETOPTX
+# Functions to parse long options in bash
+# from http://nlp.cs.jhu.edu/~edrabek/utils/
 
 function getoptex {
   [ $# -gt 0 ] || return 1
@@ -484,12 +475,11 @@ function getopt {
   return $?
 } # function getopt
 
-} # GETOPTX
 
-{ # PROMPT:
+#pragma mark - PROMPT
 
-SCREEN_TITLE="${WINDOW:+\ek$SCREEN_ESCAPE ${HOSTNAME}:\$PWD\e\\\\}"
-WINDOW_TITLE='\e]2;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\a'
+SCREEN_TITLE="${WINDOW:+\033k$SCREEN_ESCAPE ${HOSTNAME}:\$PWD\033\\\\}"
+WINDOW_TITLE='\033]2;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\007'
 PROMPT_COMMAND="echo -ne \"$WINDOW_TITLE$SCREEN_TITLE\""
 export PROMPT_COMMAND
 
@@ -511,12 +501,11 @@ PS1="\
 
 PS2="> "
 
-} # PROMPT
 
-{ # LATE
+#pragma mark - LATE
+
 [ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
-} # LATE
 
-} fi # INTERACTIVE
+#pragma mark - FINISH
 
 CLHBASHRC=yes
