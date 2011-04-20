@@ -1,6 +1,7 @@
 #pragma mark - BEGIN
 
-BASHRC_VERSION=201104200803; export BASHRC_VERSION
+$Id$
+$Format:%cd$
 
 
 #pragma mark - PATHS
@@ -52,7 +53,7 @@ if [ ${SCREEN_DISABLED:-x} = "x" ]
 then
     if { [ "$PS1" != "" \
          -a "${SCREEN_STARTED:-x}" == x ]; } \
-       && { hash screen &>/dev/null || ln -s screen_`uname -s | tr [A-Z] [a-z]` ${HOME}/bin/screen &>/dev/null; }
+       && { hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; }
     then
         echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
@@ -146,23 +147,26 @@ set -o vi
 #pragma mark - COLOR
 # Put a little color in your life
 
-CLICOLOR=true                  ; export CLICOLOR
-LSCOLORS=exfxcxdxbxegedabagacad; export LSCOLORS
-LESS_TERMCAP_mb=$'\E[01;31m'   ; export LESS_TERMCAP_mb
-LESS_TERMCAP_md=$'\E[01;31m'   ; export LESS_TERMCAP_md
-LESS_TERMCAP_me=$'\E[0m'       ; export LESS_TERMCAP_me
-LESS_TERMCAP_se=$'\E[0m'       ; export LESS_TERMCAP_se
-LESS_TERMCAP_so=$'\E[01;44;33m'; export LESS_TERMCAP_so
-LESS_TERMCAP_ue=$'\E[0m'       ; export LESS_TERMCAP_ue
-LESS_TERMCAP_us=$'\E[01;32m'   ; export LESS_TERMCAP_us
-if ls --color=tty &>/dev/null
-then
-    alias ls="ls --color=tty"
-    DIRCOLORS=`type -p dircolors`
-    if [ -x "$DIRCOLORS" -a -r "${HOME}/.dircolors" ]; then
-        eval `"$DIRCOLORS" "${HOME}/.dircolors"`
+CLICOLOR='YES'                     ; export CLICOLOR
+LSCOLORS='exfxcxdxbxegedabagacad'  ; export LSCOLORS
+LESS_TERMCAP_mb=$'\077[01;31m'     ; export LESS_TERMCAP_mb
+LESS_TERMCAP_md=$'\077[01;31m'     ; export LESS_TERMCAP_md
+LESS_TERMCAP_me=$'\077[0m'         ; export LESS_TERMCAP_me
+LESS_TERMCAP_se=$'\077[0m'         ; export LESS_TERMCAP_se
+LESS_TERMCAP_so=$'\077[01;44;33m'  ; export LESS_TERMCAP_so
+LESS_TERMCAP_ue=$'\077[0m'         ; export LESS_TERMCAP_ue
+LESS_TERMCAP_us=$'\077[01;32m'     ; export LESS_TERMCAP_us
+
+if [ ! -f $HOME/.ls_colors ]; then
+    if ls --color=tty &>/dev/null
+    then
+        echo 'LS_COLORS=--color=tty' > $HOME/.ls_colors
+    else
+        echo 'LS_COLORS=""' > $HOME/.ls_colors
     fi
 fi
+
+. $HOME/.ls_colors && alias ls="ls $LS_COLORS"
 
 
 #pragma mark - DATE
