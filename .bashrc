@@ -1,6 +1,6 @@
 #pragma mark - BEGIN
 
-BASHRC_VERSION=201104200759; export BASHRC_VERSION
+BASHRC_VERSION=201104200803; export BASHRC_VERSION
 
 
 #pragma mark - PATHS
@@ -54,7 +54,7 @@ then
          -a "${SCREEN_STARTED:-x}" == x ]; } \
        && { hash screen &>/dev/null || ln -s screen_`uname -s | tr [A-Z] [a-z]` ${HOME}/bin/screen &>/dev/null; }
     then
-        echo -ne "\e]1;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\a"
+        echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
         then
@@ -478,8 +478,8 @@ function getopt {
 
 #pragma mark - PROMPT
 
-SCREEN_TITLE="${WINDOW:+\033k$SCREEN_ESCAPE ${HOSTNAME}:\$PWD\033\\\\}"
-WINDOW_TITLE='\033]2;$HOSTNAME${WINDOW:+/${STY#*.}#$WINDOW}\007'
+SCREEN_TITLE="${WINDOW:+\033k$SCREEN_ESCAPE ${HOSTNAME%.*}:\$PWD\033\\\\}"
+WINDOW_TITLE='\033]2;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\007'
 PROMPT_COMMAND="echo -ne \"$WINDOW_TITLE$SCREEN_TITLE\""
 export PROMPT_COMMAND
 
@@ -487,7 +487,7 @@ export PROMPT_COMMAND
 # $
 PS1="\
 \[\${_U[\$UID]:-$_Cb}\][\[$_Cn\]\
-\u@${HOSTNAME}:\W\
+\u@${HOSTNAME%.*}:\W\
 \[\${_U[\$UID]:-$_Cb}\]]\[$_Cn\]\
 \[${_Cp}200C${_Cp}28D${_Cp}\${#?}D\]\
 \[\${_R[\$?]:-$_Cr}\](\[$_Cn\]\
