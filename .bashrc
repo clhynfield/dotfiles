@@ -40,13 +40,11 @@ fi
 #pragma mark - SCREEN
 # start screen automatically unless TERM ends in "noscreen"
 
-if [ "${TERM%noscreen}" != "$TERM" ]
+if [ "${TERM%noscreen}" == "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
-    if  [ -z "${CLH_SCREEN_STARTED}" 
-       && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; }
-    then
+    if  [ -z "${CLH_SCREEN_STARTED}" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
         echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
