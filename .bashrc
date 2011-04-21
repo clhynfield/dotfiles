@@ -23,7 +23,7 @@ LC_TYPE=en_US.UTF-8; export LC_TYPE
 
 [ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
     
-[ ! -z "$CLHBASHRC" ] && return # Already sourced this file, no need to do it again.
+[ ! -z "$CLH_BASHRC_LOADED" ] && return # Already sourced this file, no need to do it again.
 
 
 #pragma mark - EARLY
@@ -38,13 +38,16 @@ fi
 
 
 #pragma mark - SCREEN
-# start screen automatically if this is a remote login
+# start screen automatically unless TERM ends in "noscreen"
 
 if [ "${TERM%noscreen}" != "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
-    if [ -z "$SCREEN_STARTED" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
+    if  [ -z "${CLH_SCREEN_STARTED}" 
+       && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; }
+    then
+        echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
         then
@@ -52,8 +55,8 @@ else
         else
             [ -r "$HOME"/.screenrc ] && cp "$HOME"/.screenrc "$HOME"/.screenrc.$BASHRC_VERSION
             cat <<EOF_SCREENRC > "$HOME"/.screenrc
-setenv SCREEN_RC_VERSION $BASHRC_VERSION
-setenv SCREEN_STARTED 1
+setenv CLH_SCREENRC_VERSION $BASHRC_VERSION
+setenv CLH_SCREEN_STARTED 1
 
 termcapinfo xterm 'hs:xt:tf:ax:af=\E[3%dm:ts=\E]2;:fs=\007:ds=\E]2;screen\007:ti@:te@:WS=\E[8;%d;%d;t'
 term xterm
@@ -502,4 +505,4 @@ PS2="> "
 
 #pragma mark - FINISH
 
-CLHBASHRC=yes
+CLH_BASHRC_LOADED=yes
