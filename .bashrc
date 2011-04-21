@@ -1,8 +1,5 @@
 #pragma mark - BEGIN
 
-$Id$
-$Format:%cd$
-
 
 #pragma mark - PATHS
 
@@ -43,18 +40,11 @@ fi
 #pragma mark - SCREEN
 # start screen automatically if this is a remote login
 
-if [ "${TERM: -8}" == "noscreen" ]
+if [ "${TERM%noscreen}" != "$TERM" ]
 then
-  TERM="${TERM/noscreen/}"
-  SCREEN_DISABLED=1
-fi
-
-if [ ${SCREEN_DISABLED:-x} = "x" ]
-then
-    if { [ "$PS1" != "" \
-         -a "${SCREEN_STARTED:-x}" == x ]; } \
-       && { hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; }
-    then
+  TERM="${TERM%noscreen}"
+else
+    if [ -z "$SCREEN_STARTED" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
         echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
