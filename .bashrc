@@ -45,7 +45,6 @@ then
   TERM="${TERM%noscreen}"
 else
     if [ -z "$SCREEN_STARTED" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
-        echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
         then
@@ -85,7 +84,7 @@ setenv DISPLAY :0.0
 bind s width 132 42
 EOF_SCREENRC_LOCAL
         fi
-        if [ "${SSH_TTY:-x}" == "x" ]
+        if [ -z "$SSH_TTY" ]
         then
             export SCREEN_ESCAPE=$'\cxx'
             export SCREEN_SESSION="local"
@@ -102,6 +101,7 @@ EOF_SCREENRC_LOCAL
             export SCREEN_RC=".screenrc"
         fi
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
+        export SCREEN_STARTED=yes
         exec screen -A -x -R $SCREEN_SESSION -c "$HOME"/$SCREEN_RC
         # normally, execution of this rc script ends here...
         echo "Screen failed; continuing with normal bash startup"
