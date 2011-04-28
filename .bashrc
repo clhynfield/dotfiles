@@ -40,70 +40,25 @@ fi
 #pragma mark - SCREEN
 # start screen automatically unless TERM ends in "noscreen"
 
-if [ "${TERM%noscreen}" == "$TERM" ]
+if [ "${TERM%noscreen}" != "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
     if  [ -z "${CLH_SCREEN_STARTED}" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
-        echo -ne "\e]1;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\a"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
-        if grep "$BASHRC_VERSION" "$HOME"/.screenrc &>/dev/null
-        then
-            echo -n ""
-        else
-            [ -r "$HOME"/.screenrc ] && cp "$HOME"/.screenrc "$HOME"/.screenrc.$BASHRC_VERSION
-            cat <<EOF_SCREENRC > "$HOME"/.screenrc
-setenv CLH_SCREENRC_VERSION $BASHRC_VERSION
-setenv CLH_SCREEN_STARTED 1
-
-termcapinfo xterm 'hs:xt:tf:ax:af=\E[3%dm:ts=\E]2;:fs=\007:ds=\E]2;screen\007:ti@:te@:WS=\E[8;%d;%d;t'
-term xterm
-hardstatus on
-
-defscrollback 10000
-
-defutf8 on
-caption always
-
-escape \$SCREEN_ESCAPE
-
-shell /bin/bash
-
-logfile "\$HOME/log/screen/%Y%m%d-%n.log"
-deflog on
-
-startup_message off
-
-autodetach on
-EOF_SCREENRC
-            [ -r "$HOME"/.screenrc.local ] && cp "$HOME"/.screenrc.local "$HOME"/.screenrc.local.$BASHRC_VERSION
-            ( cat "$HOME"/.screenrc; cat <<"EOF_SCREENRC_LOCAL" ) > "$HOME"/.screenrc.local
-height $SCREEN_HEIGHT
-width $SCREEN_WIDTH
-hardstatus string $SCREEN_HARDSTATUS
-setenv DISPLAY :0.0
-bind s width 132 42
-EOF_SCREENRC_LOCAL
-        fi
         if [ -z "$SSH_TTY" ]
         then
-            export SCREEN_ESCAPE=$'\cxx'
-            export SCREEN_SESSION="local"
-            export SCREEN_HARDSTATUS="%n %h"
-            export SCREEN_WIDTH=132
-            export SCREEN_HEIGHT=42
-            export SCREEN_RC=".screenrc.local"
+            export CLH_SCREEN_ESCAPE=$'\cxx'
+            export CLH_SCREEN_SESSION="local"
+            export CLH_SCREEN_RC=".screenrc.local"
         else
-            export SCREEN_ESCAPE=$'\caa'
-            export SCREEN_SESSION="ssh"
-            export SCREEN_HARDSTATUS="%h"
-            export SCREEN_WIDTH=132
-            export SCREEN_HEIGHT=41
-            export SCREEN_RC=".screenrc"
+            export CLH_SCREEN_ESCAPE=$'\caa'
+            export CLH_SCREEN_SESSION="ssh"
+            export CLH_SCREEN_RC=".screenrc"
         fi
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
-        export SCREEN_STARTED=yes
-        exec screen -A -x -R $SCREEN_SESSION -c "$HOME"/$SCREEN_RC
+        export CLH_SCREEN_STARTED=yes
+        exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
         # normally, execution of this rc script ends here...
         echo "Screen failed; continuing with normal bash startup"
     fi
@@ -140,13 +95,13 @@ set -o vi
 
 CLICOLOR='YES'                     ; export CLICOLOR
 LSCOLORS='exfxcxdxbxegedabagacad'  ; export LSCOLORS
-LESS_TERMCAP_mb=$'\077[01;31m'     ; export LESS_TERMCAP_mb
-LESS_TERMCAP_md=$'\077[01;31m'     ; export LESS_TERMCAP_md
-LESS_TERMCAP_me=$'\077[0m'         ; export LESS_TERMCAP_me
-LESS_TERMCAP_se=$'\077[0m'         ; export LESS_TERMCAP_se
-LESS_TERMCAP_so=$'\077[01;44;33m'  ; export LESS_TERMCAP_so
-LESS_TERMCAP_ue=$'\077[0m'         ; export LESS_TERMCAP_ue
-LESS_TERMCAP_us=$'\077[01;32m'     ; export LESS_TERMCAP_us
+LESS_TERMCAP_mb=$'\033[01;31m'     ; export LESS_TERMCAP_mb
+LESS_TERMCAP_md=$'\033[01;31m'     ; export LESS_TERMCAP_md
+LESS_TERMCAP_me=$'\033[0m'         ; export LESS_TERMCAP_me
+LESS_TERMCAP_se=$'\033[0m'         ; export LESS_TERMCAP_se
+LESS_TERMCAP_so=$'\033[01;44;33m'  ; export LESS_TERMCAP_so
+LESS_TERMCAP_ue=$'\033[0m'         ; export LESS_TERMCAP_ue
+LESS_TERMCAP_us=$'\033[01;32m'     ; export LESS_TERMCAP_us
 
 if [ ! -f $HOME/.ls_colors ]; then
     if ls --color=tty &>/dev/null
@@ -262,7 +217,7 @@ complete -o default -o nospace -F _scp_completion scp
 
 #pragma mark - TITLES AND PROMPTS
 
-_Cp=$'\e['
+_Cp=$'\033['
 _Ck="${_Cp}30m"
 _Cr="${_Cp}31m"
 _Cg="${_Cp}32m"
@@ -335,7 +290,7 @@ function tfunk {
                     cyan )        string="$string${_Cc}" ;;
                     white )       string="$string${_Cw}" ;;
                     * )           string="$string${_Cn}" ;; esac ;;
-            R | reset )           string="$string\ec" ;;
+            R | reset )           string="$string\033c" ;;
             h | height )
                 height="$OPTARG"
                 string="$string${_Cp}8;${height};${width}t" ;;
@@ -349,7 +304,7 @@ function tfunk {
     # Default action is to reset the window and resize to 132x42
     if [ -z "$string" ]
     then
-        echo -ne "\e[8;42;132t\e[8;42;132\ec"
+        echo -ne "\033[8;42;132t\033[8;42;132\033c"
     else
         echo -ne "$string"
     fi
@@ -473,7 +428,7 @@ function getopt {
 
 #pragma mark - PROMPT
 
-SCREEN_TITLE="${WINDOW:+\033k$SCREEN_ESCAPE ${HOSTNAME%.*}:\$PWD\033\\\\}"
+SCREEN_TITLE="${WINDOW:+\033k$CLH_SCREEN_ESCAPE ${HOSTNAME%.*}:\$PWD\033\\\\}"
 WINDOW_TITLE='\033]2;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\007'
 PROMPT_COMMAND="echo -ne \"$WINDOW_TITLE$SCREEN_TITLE\""
 export PROMPT_COMMAND
