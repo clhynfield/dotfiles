@@ -5,7 +5,7 @@ termcapinfo xterm 'ti@:te@'
 # allow hardstatus line in window title
 termcapinfo xterm 'hs:ts=\033]2;:fs=\007:ds=\033]2;screen\007'
 # allow escape codes to resize window
-termcapinfo xterm 'WS=\033[8;%d;%d;t'
+#termcapinfo xterm 'WS=\033[8;%d;%d;t'
 # allow mouse tracking, OSC
 termcapinfo xterm 'xt'
 # allow missing capabilities
@@ -22,11 +22,13 @@ term xterm
 defscrollback 10000
 
 defutf8 on
-caption always
 
 escape a
-
-shell /bin/bash
+caption always "%H:%t"
+#bind t command -c title
+#bind -c title n caption always "//%H%t"
+#bind -c title s caption always "%H:%t"
+hardstatus string "%h"
 
 logfile "\$HOME/log/screen/%Y%m%d-%n.log"
 deflog on

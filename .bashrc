@@ -1,5 +1,6 @@
 #pragma mark - BEGIN
 
+cd
 
 #pragma mark - PATHS
 
@@ -23,7 +24,7 @@ LC_TYPE=en_US.UTF-8; export LC_TYPE
 
 [ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
     
-[ ! -z "$CLH_BASHRC_LOADED" ] && return # Already sourced this file, no need to do it again.
+[ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
 
 
 #pragma mark - EARLY
@@ -58,7 +59,7 @@ else
         fi
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
         export CLH_SCREEN_STARTED=yes
-        exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
+        exec screen -U -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
         # normally, execution of this rc script ends here...
         echo "Screen failed; continuing with normal bash startup"
     fi
@@ -106,13 +107,9 @@ LESS_TERMCAP_us=$'\033[01;32m'     ; export LESS_TERMCAP_us
 if [ ! -f $HOME/.ls_colors ]; then
     if ls --color=tty &>/dev/null
     then
-        echo 'LS_COLORS=--color=tty' > $HOME/.ls_colors
-    else
-        echo 'LS_COLORS=""' > $HOME/.ls_colors
+        alias ls='ls --color=tty'
     fi
 fi
-
-. $HOME/.ls_colors && alias ls="ls $LS_COLORS"
 
 
 #pragma mark - DATE
@@ -137,9 +134,9 @@ else
     PAGER=more
 fi; export PAGER
 
-function mcd { mkdir -p $1 && cd $1; }
+mcd() { mkdir -p $1 && cd $1; }
 
-function awksum {
+awksum() {
 	sep="";
 	if [ "$1" = "-F" ]; then
 		sep="-F $2";
@@ -156,7 +153,7 @@ function awksum {
 	awk $sep '{sum = sum + '$field'} END {print sum}'
 }
 
-function rule {
+rule() {
     echo '12345678901234567890123456789012345678901234567890123456789012345678901234567890'
     echo '         1         2         3         4         5         6         7         8'
 }
@@ -428,7 +425,8 @@ function getopt {
 
 #pragma mark - PROMPT
 
-SCREEN_TITLE="${WINDOW:+\033k$CLH_SCREEN_ESCAPE ${HOSTNAME%.*}:\$PWD\033\\\\}"
+#SCREEN_TITLE="${WINDOW:+\033k$CLH_SCREEN_ESCAPE ${HOSTNAME%.*}:\$PWD\033\\\\}"
+SCREEN_TITLE="${WINDOW:+\033k\$PWD\033\\\\}"
 WINDOW_TITLE='\033]2;${HOSTNAME%.*}${WINDOW:+/${STY#*.}#$WINDOW}\007'
 PROMPT_COMMAND="echo -ne \"$WINDOW_TITLE$SCREEN_TITLE\""
 export PROMPT_COMMAND
@@ -458,4 +456,4 @@ PS2="> "
 
 #pragma mark - FINISH
 
-CLH_BASHRC_LOADED=yes
+CLH_SHELLRC_LOADED=yes

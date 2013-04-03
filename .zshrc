@@ -1,12 +1,73 @@
+PATH=\
+~/bin:/usr/local/bin:/usr/xpg4/bin:/usr/bin:/bin:\
+/usr/ucb:/usr/ccs/bin:/usr/contrib/bin:/usr/games:\
+/usr/bin/X11:/usr/openwin/bin\
+/opt/bin:\
+/usr/local/sbin:/usr/sbin:/sbin
+export PATH
+
+MANPATH=\
+/usr/share/man:/usr/local/man:/usr/man:\
+/usr/xpg4/man:/usr/ucb/man:\
+/usr/X11R6/man:/usr/openwin/man:\
+/usr/lang/man
+export MANPATH
+
+
+LC_TYPE=en_US.UTF-8; export LC_TYPE
+
+[ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
+
+[ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
+
+# start screen automatically unless TERM ends in "noscreen"
+
+if [ "${TERM%noscreen}" != "$TERM" ]
+then
+  TERM="${TERM%noscreen}"
+else
+    if  [ -z "${CLH_SCREEN_STARTED}" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
+        [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
+        if [ -z "$SSH_TTY" ]
+        then
+            export CLH_SCREEN_ESCAPE=$'\cxx'
+            export CLH_SCREEN_SESSION="local"
+            export CLH_SCREEN_RC=".screenrc.local"
+        else
+            export CLH_SCREEN_ESCAPE=$'\caa'
+            export CLH_SCREEN_SESSION="ssh"
+            export CLH_SCREEN_RC=".screenrc"
+        fi
+        [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
+        export CLH_SCREEN_STARTED=yes
+        exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
+        # normally, execution of this rc script ends here...
+        echo "Screen failed; continuing with normal bash startup"
+    fi
+fi
+
+zstyle ':completion:*' completer _expand _complete _ignored
+zstyle :compinstall filename '/home/n0163999/.zshrc'
+
+autoload -Uz compinit
+compinit
+
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory notify
 setopt extended_history
+
+bindkey -v
+
 setopt prompt_percent
 setopt prompt_subst
+setopt vi
+setopt interactive_comments
+setopt extended_glob
 
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=2000
-SAVEHIST=1000
 
 _Cp=$'\e['
 _Ck="${_Cp}30m"
@@ -37,18 +98,6 @@ PS1="%(!.%F$_Cr.%F$_Cb)[${_Cn}%n@%m:%1~${_Cb}]${_Cn}\
 ${_Cp}200C${_Cp}31D%(?.$_Cb.$_Cr)(%?)${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
 %! %# "
 
-if [[ $ZSH_NAME != 'zsh' ]]; then
-    alias blcli='blcli -r AMKT-WIDE-APPSERVICES_PACKAGER'
-    
-    setopt vi
-    
-    if blcred cred -test; then
-        blcli_setoption serviceProfileName Prod
-        blcli_setoption roleName AMKT-WIDE-APPSERVICES_PACKAGER
-        blcli_connect && echo "blcli now connected" || echo "blcli connection failed"
-        alias bl=blcli_execute
-        alias blstore=blcli_storeenv
-    else
-        echo "BL credential test failed, try restarting NSH"
-    fi
-fi
+[ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
+
+CLH_SHELLRC_LOADED=yes
