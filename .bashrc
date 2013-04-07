@@ -97,11 +97,9 @@ set -o vi
 CLICOLOR='YES'                     ; export CLICOLOR
 LSCOLORS='exfxcxdxbxegedabagacad'  ; export LSCOLORS
 
-if [ ! -f $HOME/.ls_colors ]; then
-    if ls --color=tty &>/dev/null
-    then
-        alias ls='ls --color=tty'
-    fi
+if ls --color=tty &>/dev/null
+then
+    alias ls='ls --color=tty'
 fi
 
 
