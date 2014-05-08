@@ -30,8 +30,8 @@ LC_TYPE=en_US.UTF-8; export LC_TYPE
 #pragma mark - EARLY
 
 if [ -z "$BASH" -a -x /bin/bash ]; then # SWITCH TO BASH
-  exec /bin/bash
-  exec /bin/bash
+    exec /bin/bash
+    exec /bin/bash
 fi
 
 [ -r ${HOME}/.bashrc_local ] && . ${HOME}/.bashrc_local
@@ -43,7 +43,7 @@ fi
 
 if [ "${TERM%noscreen}" != "$TERM" ]
 then
-  TERM="${TERM%noscreen}"
+    TERM="${TERM%noscreen}"
 else
     if  [ -z "${CLH_SCREEN_STARTED}" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
