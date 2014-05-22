@@ -31,10 +31,8 @@ if [ "${TERM%noscreen}" != "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
-    if  [ -z "${CLH_SCREEN_STARTED}" ] && hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
-        [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
-        if [ -z "$SSH_TTY" ]
-        then
+    if [ -z "$TMUX" ] && [ -z "${CLH_SCREEN_STARTED}" ] 
+        if [ -z "$SSH_TTY" ]; then
             export CLH_SCREEN_ESCAPE=$'\cxx'
             export CLH_SCREEN_SESSION="local"
             export CLH_SCREEN_RC=".screenrc.local"
@@ -43,11 +41,17 @@ else
             export CLH_SCREEN_SESSION="ssh"
             export CLH_SCREEN_RC=".screenrc"
         fi
+        if hash tmux 2>/dev/null; then
+            SCREEN_CMD=tmux
+        elif hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
+            SCREEN_CMD="screen -A -x -R $CLH_SCREEN_SESSION -c $HOME/$CLH_SCREEN_RC"
+        [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
         [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
         export CLH_SCREEN_STARTED=yes
-        exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
+        #exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
+        exec tmux -u
         # normally, execution of this rc script ends here...
-        echo "Screen failed; continuing with normal bash startup"
+        echo "Screen failed; continuing with normal $SHELL startup"
     fi
 fi
 
