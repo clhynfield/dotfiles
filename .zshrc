@@ -7,9 +7,14 @@ PATH=\
 export PATH
 
 MANPATH=\
-/usr/share/man:/usr/local/man:/usr/man:\
-/usr/xpg4/man:/usr/ucb/man:\
-/usr/X11R6/man:/usr/openwin/man:\
+/usr/share/man:\
+/usr/local/man:\
+/usr/local/share/man:\
+/usr/man:\
+/usr/xpg4/man:\
+/usr/ucb/man:\
+/usr/X11R6/man:\
+/usr/openwin/man:\
 /usr/lang/man
 export MANPATH
 
