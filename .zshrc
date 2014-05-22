@@ -104,8 +104,13 @@ _Cn="${_Cp}39m"
 #"
 
 PS1="%(!.%F$_Cr.%F$_Cb)[${_Cn}%n@%m:%1~${_Cb}]${_Cn}\
-${_Cp}200C${_Cp}31D%(?.$_Cb.$_Cr)(%?)${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
-%! %# "
+${_Cp}200C${_Cp}33D%(?.$_Cb.$_Cr)(%?)${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
+%! %(?.😃.😡)  %# "
+
+SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
+WINDOW_TITLE='\033]2;%m:%1~\007'
+precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
+
 
 [ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
 
