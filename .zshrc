@@ -55,10 +55,23 @@ else
     fi
 fi
 
-zstyle ':completion:*' completer _expand _complete _ignored
+[ -d "$HOME"/.zsh ] || mkdir "$HOME"/.zsh
+[ -d "$HOME"/.zsh/antigen ] || \
+    git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
 
-autoload -Uz compinit
-compinit
+source "$HOME"/.zsh/antigen/antigen.zsh
+
+antigen use oh-my-zsh
+
+antigen bundles <<EOBUNDLES
+git
+svn
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-completions src
+krujos/cf-zsh-autocompletion cf
+EOBUNDLES
+
+antigen apply
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
@@ -76,35 +89,7 @@ setopt vi
 setopt interactive_comments
 setopt extended_glob
 
-
-_Cp=$'\e['
-_Ck="${_Cp}30m"
-_Cr="${_Cp}31m"
-_Cg="${_Cp}32m"
-_Cy="${_Cp}33m"
-_Cb="${_Cp}34m"
-_Cm="${_Cp}35m"
-_Cc="${_Cp}36m"
-_Cw="${_Cp}37m"
-_Cn="${_Cp}39m"
-
-#PS1="\
-#\${_U[\$UID]:-$_Cb}[$_Cn\
-#%n@%m:\W\
-#\${_U[\$UID]:-$_Cb}]$_Cn\
-#${_Cp}200C${_Cp}28D${_Cp}\${#?}D\
-#\${_R[\$?]:-$_Cr}($_Cn\
-#\$?\
-#\${_R[\$?]:-$_Cr})$_Cn\
-#$_Cb[$_Cn\
-#\D{$STRFTIME}\
-#$_Cb]$_Cn\
-#\n\! \\$ \
-#"
-
-PS1="%(!.%F$_Cr.%F$_Cb)[${_Cn}%n@%m:%1~${_Cb}]${_Cn}\
-${_Cp}200C${_Cp}33D%(?.$_Cb.$_Cr)(%?)${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
-%! %(?.😃.😡)  %# "
+antigen theme clhynfield/dotfiles clayton
 
 SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
 WINDOW_TITLE='\033]2;%m:%1~\007'
@@ -112,8 +97,5 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 
 
 [ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
-
-[ -d "$HOME/.zsh/completions" ] && fpath=("$HOME/.zsh/completions" $fpath)
-[ -d /usr/local/share/zsh-completions ] && fpath=(/usr/local/share/zsh-completions $fpath)
 
 CLH_SHELLRC_LOADED=yes
