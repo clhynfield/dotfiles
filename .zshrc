@@ -61,6 +61,8 @@ fi
 
 source "$HOME"/.zsh/antigen/antigen.zsh
 
+antigen use oh-my-zsh
+
 zstyle ':completion:*' completer _expand _complete _ignored
 
 autoload -Uz compinit
