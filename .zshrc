@@ -56,7 +56,6 @@ else
 fi
 
 zstyle ':completion:*' completer _expand _complete _ignored
-zstyle :compinstall filename '/home/n0163999/.zshrc'
 
 autoload -Uz compinit
 compinit
