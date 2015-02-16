@@ -31,7 +31,7 @@ if [ "${TERM%noscreen}" != "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
-    if [ -z "$TMUX" ] && [ -z "${CLH_SCREEN_STARTED}" ] 
+    if [ -z "$TMUX" ] && [ -z "${CLH_SCREEN_STARTED}" ]
         if [ -z "$SSH_TTY" ]; then
             export CLH_SCREEN_ESCAPE=$'\cxx'
             export CLH_SCREEN_SESSION="local"
@@ -113,5 +113,8 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 
 
 [ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
+
+[ -d "$HOME/.zsh/completions" ] && fpath=("$HOME/.zsh/completions" $fpath)
+[ -d /usr/local/share/zsh-completions ] && fpath=(/usr/local/share/zsh-completions $fpath)
 
 CLH_SHELLRC_LOADED=yes
