@@ -66,6 +66,7 @@ antigen use oh-my-zsh
 antigen bundles <<EOBUNDLES
 git
 svn
+zsh-users/zsh-syntax-highlighting
 EOBUNDLES
 
 zstyle ':completion:*' completer _expand _complete _ignored
