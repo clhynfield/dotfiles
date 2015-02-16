@@ -55,6 +55,12 @@ else
     fi
 fi
 
+[ -d "$HOME"/.zsh ] || mkdir "$HOME"/.zsh
+[ -d "$HOME"/.zsh/antigen ] || \
+    git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
+
+source "$HOME"/.zsh/antigen/antigen.zsh
+
 zstyle ':completion:*' completer _expand _complete _ignored
 
 autoload -Uz compinit
