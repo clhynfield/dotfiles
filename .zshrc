@@ -67,12 +67,11 @@ antigen bundles <<EOBUNDLES
 git
 svn
 zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-completions src
+krujos/cf-zsh-autocompletion cf
 EOBUNDLES
 
-zstyle ':completion:*' completer _expand _complete _ignored
-
-autoload -Uz compinit
-compinit
+antigen apply
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
@@ -112,8 +111,5 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 
 
 [ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
-
-[ -d "$HOME/.zsh/completions" ] && fpath=("$HOME/.zsh/completions" $fpath)
-[ -d /usr/local/share/zsh-completions ] && fpath=(/usr/local/share/zsh-completions $fpath)
 
 CLH_SHELLRC_LOADED=yes
