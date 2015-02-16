@@ -89,7 +89,7 @@ setopt vi
 setopt interactive_comments
 setopt extended_glob
 
-antigen theme clhynfield/dotfiles clayton
+antigen theme clhynfield/dotfiles themes/clayton
 
 SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
 WINDOW_TITLE='\033]2;%m:%1~\007'
