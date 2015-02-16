@@ -63,6 +63,11 @@ source "$HOME"/.zsh/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
+antigen bundles <<EOBUNDLES
+git
+svn
+EOBUNDLES
+
 zstyle ':completion:*' completer _expand _complete _ignored
 
 autoload -Uz compinit
