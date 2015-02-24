@@ -61,6 +61,9 @@ fi
 
 source "$HOME"/.zsh/antigen/antigen.zsh
 
+alias compdef=true
+alias alias=true
+
 antigen use oh-my-zsh
 
 antigen bundles <<EOBUNDLES
@@ -70,6 +73,9 @@ zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-completions src
 krujos/cf-zsh-autocompletion cf
 EOBUNDLES
+
+unalias alias
+unalias compdef
 
 antigen apply
 
