@@ -1,19 +1,19 @@
 
-_Cp=$'\e['
-_Ck="${_Cp}30m"
-_Cr="${_Cp}31m"
-_Cg="${_Cp}32m"
-_Cy="${_Cp}33m"
-_Cb="${_Cp}34m"
-_Cm="${_Cp}35m"
-_Cc="${_Cp}36m"
-_Cw="${_Cp}37m"
-_Cn="${_Cp}39m"
+local _Cp=$'\e['
+local _Ck="${_Cp}30m"
+local _Cr="${_Cp}31m"
+local _Cg="${_Cp}32m"
+local _Cy="${_Cp}33m"
+local _Cb="${_Cp}34m"
+local _Cm="${_Cp}35m"
+local _Cc="${_Cp}36m"
+local _Cw="${_Cp}37m"
+local _Cn="${_Cp}39m"
 
-return_status="%(?.. %{$fg[red]%}↵%?%{$reset_color%})"
+local return_status="%(?.. ${_Cp}$#?D%{$fg[red]%}↵%?%{$reset_color%})"
 
 PROMPT="%(!.%F$_Cr.%F$_Cb)[${_Cn}%n@%m:%1~%(!.%F$_Cr.%F$_Cb)]${_Cn}\
-${_Cp}200C${_Cp}28D${return_status}${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
+${_Cp}200C${_Cp}27D${return_status}${_Cb}[${_Cn}%D{$STRFTIME}${_Cb}]${_Cn}
 %! %# "
 
 RPROMPT='$(git_prompt_status) $(git_prompt_short_sha) $(git_prompt_info)'
