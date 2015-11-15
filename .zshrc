@@ -97,6 +97,9 @@ setopt extended_glob
 
 antigen theme clhynfield/dotfiles themes/clayton
 
+export LSCOLORS='Exfxcxdxbxegedabagacad'
+export CLICOLOR='true'
+
 SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
 WINDOW_TITLE='\033]2;%m:%1~\007'
 precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
