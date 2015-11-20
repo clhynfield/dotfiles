@@ -72,6 +72,7 @@ svn
 zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-completions src
 krujos/cf-zsh-autocompletion cf
+krujos/bosh-zsh-autocompletion bosh
 EOBUNDLES
 
 unalias alias
