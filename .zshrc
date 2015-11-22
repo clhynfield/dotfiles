@@ -21,6 +21,8 @@ export MANPATH
 
 LC_TYPE=en_US.UTF-8; export LC_TYPE
 
+VISUAL=vim; export VISUAL
+
 [ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
 
 [ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
