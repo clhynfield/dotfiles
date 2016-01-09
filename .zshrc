@@ -57,18 +57,18 @@ else
     fi
 fi
 
-[ -d "$HOME"/.zsh ] || mkdir "$HOME"/.zsh
-[ -d "$HOME"/.zsh/antigen ] || \
-    git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
+# [ -d "$HOME"/.zsh ] || mkdir "$HOME"/.zsh
+# [ -d "$HOME"/.zsh/antigen ] || \
+#     git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
 
-source "$HOME"/.zsh/antigen/antigen.zsh
+source "$(brew --prefix)/share/antibody.zsh"
 
 alias compdef=true
 alias alias=true
 
-antigen use oh-my-zsh
+# antigen use oh-my-zsh
 
-antigen bundles <<EOBUNDLES
+antibody bundle <<EOBUNDLES
 git
 svn
 krujos/cf-zsh-autocompletion cf
@@ -83,8 +83,6 @@ fpath+='/usr/local/share/zsh/site-functions'
 
 unalias alias
 unalias compdef
-
-antigen apply
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
@@ -102,7 +100,6 @@ setopt vi
 setopt interactive_comments
 setopt extended_glob
 
-# antigen theme clhynfield/dotfiles themes/clayton
 setopt transient_rprompt
 
 export LSCOLORS='Exfxcxdxbxegedabagacad'
