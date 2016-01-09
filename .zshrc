@@ -99,6 +99,7 @@ setopt interactive_comments
 setopt extended_glob
 
 antigen theme clhynfield/dotfiles themes/clayton
+setopt transient_rprompt
 
 export LSCOLORS='Exfxcxdxbxegedabagacad'
 export CLICOLOR='true'
