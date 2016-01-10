@@ -84,6 +84,8 @@ fpath+='/usr/local/share/zsh/site-functions'
 unalias alias
 unalias compdef
 
+autoload -U compinit && compinit
+
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
 HISTFILE="$HOME/.zsh_history"
