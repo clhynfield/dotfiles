@@ -73,6 +73,8 @@ git
 svn
 krujos/cf-zsh-autocompletion cf
 krujos/bosh-zsh-autocompletion bosh
+mafredri/zsh-async
+sindresorhus/pure
 zsh-users/zsh-completions src
 zsh-users/zsh-syntax-highlighting
 EOBUNDLES
@@ -98,7 +100,7 @@ setopt vi
 setopt interactive_comments
 setopt extended_glob
 
-antigen theme clhynfield/dotfiles themes/clayton
+# antigen theme clhynfield/dotfiles themes/clayton
 setopt transient_rprompt
 
 export LSCOLORS='Exfxcxdxbxegedabagacad'
