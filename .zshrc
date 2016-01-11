@@ -71,10 +71,10 @@ antigen use oh-my-zsh
 antigen bundles <<EOBUNDLES
 git
 svn
-zsh-users/zsh-syntax-highlighting
-zsh-users/zsh-completions src
 krujos/cf-zsh-autocompletion cf
 krujos/bosh-zsh-autocompletion bosh
+zsh-users/zsh-completions src
+zsh-users/zsh-syntax-highlighting
 EOBUNDLES
 
 unalias alias
