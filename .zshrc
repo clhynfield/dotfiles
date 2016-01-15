@@ -71,8 +71,8 @@ alias alias=true
 antibody bundle <<EOBUNDLES
 git
 svn
-krujos/cf-zsh-autocompletion cf
-krujos/bosh-zsh-autocompletion bosh
+clhynfield/cf-zsh-autocomplete-plugin
+clhynfield/bosh-zsh-autocomplete-plugin
 mafredri/zsh-async
 sindresorhus/pure
 zsh-users/zsh-completions src
