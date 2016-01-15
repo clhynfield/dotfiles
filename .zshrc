@@ -63,7 +63,6 @@ fi
 
 source "$(brew --prefix)/share/antibody.zsh"
 
-alias compdef=true
 alias alias=true
 
 # antigen use oh-my-zsh
@@ -82,7 +81,6 @@ EOBUNDLES
 fpath+='/usr/local/share/zsh/site-functions'
 
 unalias alias
-unalias compdef
 
 autoload -U compinit && compinit
 
