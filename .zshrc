@@ -68,10 +68,8 @@ alias alias=true
 # antigen use oh-my-zsh
 
 antibody bundle <<EOBUNDLES
-git
-svn
-clhynfield/cf-zsh-autocomplete-plugin
-clhynfield/bosh-zsh-autocomplete-plugin
+frodenas/cf-zsh-autocomplete-plugin
+frodenas/bosh-zsh-autocomplete-plugin
 mafredri/zsh-async
 sindresorhus/pure
 zsh-users/zsh-completions src
