@@ -79,6 +79,8 @@ zsh-users/zsh-completions src
 zsh-users/zsh-syntax-highlighting
 EOBUNDLES
 
+fpath+='/usr/local/share/zsh/site-functions'
+
 unalias alias
 unalias compdef
 
