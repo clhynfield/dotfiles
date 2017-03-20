@@ -61,7 +61,9 @@ fi
 # [ -d "$HOME"/.zsh/antigen ] || \
 #     git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
 
-source "$(brew --prefix)/share/antibody.zsh"
+[ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
+
+source <(antibody init)
 
 alias alias=true
 
@@ -110,7 +112,5 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 if hash direnv 2>&1 >/dev/null; then
     eval "$(direnv hook zsh)"
 fi
-
-[ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
 
 CLH_SHELLRC_LOADED=yes
