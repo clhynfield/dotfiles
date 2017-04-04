@@ -18,10 +18,7 @@ MANPATH=\
 /usr/lang/man
 export MANPATH
 
-
 LC_TYPE=en_US.UTF-8; export LC_TYPE
-
-VISUAL=vim; export VISUAL
 
 [ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
 
@@ -115,5 +112,7 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 if hash direnv 2>&1 >/dev/null; then
     eval "$(direnv hook zsh)"
 fi
+
+VISUAL=vim; export VISUAL
 
 CLH_SHELLRC_LOADED=yes
