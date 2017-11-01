@@ -66,6 +66,8 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+if which cfenv > /dev/null; then eval "$(cfenv init -)"; fi
+
 if which antibody > /dev/null; then
     source <(antibody init)
 fi
