@@ -30,7 +30,7 @@ if [ "${TERM%noscreen}" != "$TERM" ]
 then
   TERM="${TERM%noscreen}"
 else
-    if [ -z "$TMUX" ] && [ -z "${CLH_SCREEN_STARTED}" ]
+    if [ -z "$TMUX" ] && [ -z "$CLH_SCREEN_STARTED" ]
         if [ -z "$SSH_TTY" ]; then
             export CLH_SCREEN_ESCAPE=$'\cxx'
             export CLH_SCREEN_SESSION="local"
@@ -40,43 +40,25 @@ else
             export CLH_SCREEN_SESSION="ssh"
             export CLH_SCREEN_RC=".screenrc"
         fi
-        if hash tmux 2>/dev/null; then
+        if (($+commands[tmux])); then
             SCREEN_CMD=tmux
-        elif hash screen &>/dev/null || ln -s screen_${OSTYPE%%[-.0123456789]*} ${HOME}/bin/screen &>/dev/null; then
+        elif (($+commands[screen])) \
+            || ln -s "screen_${OSTYPE%%[-.0123456789]*}" "$HOME/bin/screen" &>/dev/null; then
             SCREEN_CMD="screen -A -x -R $CLH_SCREEN_SESSION -c $HOME/$CLH_SCREEN_RC"
         [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
-        [ -d "$HOME"/log/screen ] || mkdir -p "$HOME"/log/screen
+        [ -d "$HOME/log/screen" ] || mkdir -p "$HOME/log/screen"
         export CLH_SCREEN_STARTED=yes
-        #exec screen -A -x -R $CLH_SCREEN_SESSION -c "$HOME"/$CLH_SCREEN_RC
         exec tmux -u
         # normally, execution of this rc script ends here...
         echo "Screen failed; continuing with normal $SHELL startup"
     fi
 fi
 
-# [ -d "$HOME"/.zsh ] || mkdir "$HOME"/.zsh
-# [ -d "$HOME"/.zsh/antigen ] || \
-#     git clone https://github.com/zsh-users/antigen.git "$HOME"/.zsh/antigen
+if [[ -r "$HOME/.profile_local" ]]; then source "$HOME/.profile_local"; fi
 
-[ -r ${HOME}/.profile_local ] && . ${HOME}/.profile_local
-
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-if which cfenv > /dev/null; then eval "$(cfenv init -)"; fi
-
-if which antibody > /dev/null; then
-    source <(antibody init)
-fi
+if (($+commands[antibody])); then source <(antibody init); fi
 
 alias alias=true
-
-# antigen use oh-my-zsh
-
 antibody bundle <<EOBUNDLES
 frodenas/cf-zsh-autocomplete-plugin
 frodenas/bosh-zsh-autocomplete-plugin
@@ -85,9 +67,6 @@ sindresorhus/pure
 zsh-users/zsh-completions src
 zsh-users/zsh-syntax-highlighting
 EOBUNDLES
-
-fpath+='/usr/local/share/zsh/site-functions'
-
 unalias alias
 
 autoload -U compinit && compinit
@@ -119,6 +98,15 @@ precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
 
 if hash direnv 2>&1 >/dev/null; then
     eval "$(direnv hook zsh)"
+fi
+
+if (($+commands[rbenv])); then eval "$(rbenv init -)"; fi
+if (($+commands[pyenv])); then eval "$(pyenv init -)"; fi
+if (($+commands[pyenv-virtualenv-init])); then eval "$(pyenv virtualenv-init -)"; fi
+if (($+commands[cfenv])); then eval "$(cfenv init -)"; fi
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+    export SDKMAN_DIR="$HOME/.sdkman"
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
 VISUAL=vim; export VISUAL
