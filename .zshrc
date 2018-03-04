@@ -108,6 +108,10 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     export SDKMAN_DIR="$HOME/.sdkman"
     source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
+if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
+    export NVM_DIR="$HOME/.nvm"
+    source "/usr/local/opt/nvm/nvm.sh"
+fi
 
 VISUAL=vim; export VISUAL
 
