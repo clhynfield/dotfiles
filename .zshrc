@@ -80,6 +80,7 @@ setopt appendhistory notify
 setopt extended_history
 
 bindkey -v
+bindkey -M vicmd '^[' undefined-key
 
 setopt prompt_percent
 setopt prompt_subst
