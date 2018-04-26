@@ -16,3 +16,5 @@ filetype plugin indent on    " required
 set tabstop=4
 set shiftwidth=4
 set expandtab
+
+autocmd BufNewFile,BufRead .envrc set syntax=sh
