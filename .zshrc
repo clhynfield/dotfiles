@@ -18,7 +18,8 @@ MANPATH=\
 /usr/lang/man
 export MANPATH
 
-LC_TYPE=en_US.UTF-8; export LC_TYPE
+: ${LC_TYPE:=en_US.UTF-8}
+export LC_TYPE
 
 [ $- = ${-#*i} ] && return # We're non-interactive, so no need to go on.
 
@@ -73,9 +74,9 @@ autoload -U compinit && compinit
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
-HISTFILE="$HOME/.zsh_history"
-HISTSIZE=10000
-SAVEHIST=10000
+: ${HISTFILE:=$HOME/.zsh_history}
+: ${HISTSIZE:=10000}
+: ${SAVEHIST:=10000}
 setopt appendhistory notify
 setopt extended_history
 
@@ -114,6 +115,7 @@ if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
     source "/usr/local/opt/nvm/nvm.sh"
 fi
 
-VISUAL=vim; export VISUAL
+: ${VISUAL:=vim}
+export VISUAL
 
 CLH_SHELLRC_LOADED=yes
