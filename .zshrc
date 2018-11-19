@@ -64,13 +64,14 @@ antibody bundle <<EOBUNDLES
 frodenas/cf-zsh-autocomplete-plugin
 frodenas/bosh-zsh-autocomplete-plugin
 mafredri/zsh-async
-sindresorhus/pure
 zsh-users/zsh-completions src
 zsh-users/zsh-syntax-highlighting
 EOBUNDLES
 unalias alias
 
 autoload -U compinit && compinit
+
+. /usr/share/powerline/bindings/zsh/powerline.zsh
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 

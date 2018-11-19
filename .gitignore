@@ -1,3 +1,4 @@
 .envrc
 .*.swp
 .zsh_history
+.tmux/plugins/*
