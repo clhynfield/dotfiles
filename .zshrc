@@ -75,8 +75,8 @@ autoload -U compinit && compinit
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
 : ${HISTFILE:=$HOME/.zsh_history}
-: ${HISTSIZE:=10000}
-: ${SAVEHIST:=10000}
+HISTSIZE=10000
+SAVEHIST=1000
 setopt appendhistory notify
 setopt extended_history
 
