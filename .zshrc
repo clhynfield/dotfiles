@@ -71,6 +71,8 @@ EOBUNDLES
 unalias alias
 
 autoload -U compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C "$HOME/bin/vault" vault
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
