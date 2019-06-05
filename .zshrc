@@ -25,36 +25,6 @@ export LC_TYPE
 
 [ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
 
-# start screen automatically unless TERM ends in "noscreen"
-
-if [ "${TERM%noscreen}" != "$TERM" ]
-then
-  TERM="${TERM%noscreen}"
-else
-    if [ -z "$TMUX" ] && [ -z "$CLH_SCREEN_STARTED" ]
-        if [ -z "$SSH_TTY" ]; then
-            export CLH_SCREEN_ESCAPE=$'\cxx'
-            export CLH_SCREEN_SESSION="local"
-            export CLH_SCREEN_RC=".screenrc.local"
-        else
-            export CLH_SCREEN_ESCAPE=$'\caa'
-            export CLH_SCREEN_SESSION="ssh"
-            export CLH_SCREEN_RC=".screenrc"
-        fi
-        if (($+commands[tmux])); then
-            SCREEN_CMD=tmux
-        elif (($+commands[screen])) \
-            || ln -s "screen_${OSTYPE%%[-.0123456789]*}" "$HOME/bin/screen" &>/dev/null; then
-            SCREEN_CMD="screen -A -x -R $CLH_SCREEN_SESSION -c $HOME/$CLH_SCREEN_RC"
-        [ -w "$HOME/.ssh/agentrc" ] && set | grep SSH_ > "$HOME/.ssh/agentrc"
-        [ -d "$HOME/log/screen" ] || mkdir -p "$HOME/log/screen"
-        export CLH_SCREEN_STARTED=yes
-        exec tmux -u
-        # normally, execution of this rc script ends here...
-        echo "Screen failed; continuing with normal $SHELL startup"
-    fi
-fi
-
 if [[ -r "$HOME/.profile_local" ]]; then source "$HOME/.profile_local"; fi
 
 if (($+commands[antibody])); then source <(antibody init); fi
