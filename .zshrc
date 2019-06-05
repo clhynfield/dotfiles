@@ -80,17 +80,20 @@ else
     echo 'Consider installing direnv: https://direnv.net'
 fi
 
-if (($+commands[rbenv])); then eval "$(rbenv init -)"; fi
-if (($+commands[pyenv])); then eval "$(pyenv init -)"; fi
-if (($+commands[pyenv-virtualenv-init])); then eval "$(pyenv virtualenv-init -)"; fi
+if (($+commands[rbenv])); then
+    alias rbenv='unalias rbenv; eval "$(rbenv init -)"; rbenv'
+fi
+if (($+commands[pyenv])); then
+    alias pyenv='unalias pyenv; eval "$(pyenv init -)"; pyenv'
+fi
 if (($+commands[cfenv])); then eval "$(cfenv init -)"; fi
 if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     export SDKMAN_DIR="$HOME/.sdkman"
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    alias sdkman='unalias sdkman; source "$HOME/.sdkman/bin/sdkman-init.sh"; sdkman'
 fi
 if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
     export NVM_DIR="$HOME/.nvm"
-    source "/usr/local/opt/nvm/nvm.sh"
+    alias nvm='unalias nvm; source "/usr/local/opt/nvm/nvm.sh"; nvm'
 fi
 
 : ${VISUAL:=vim}
