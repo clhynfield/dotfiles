@@ -27,22 +27,26 @@ export LC_TYPE
 
 if [[ -r "$HOME/.profile_local" ]]; then source "$HOME/.profile_local"; fi
 
-if (($+commands[antibody])); then source <(antibody init); fi
+if (($+commands[antibody])); then
+    source <(antibody init)
 
-alias alias=true
-antibody bundle <<EOBUNDLES
-frodenas/cf-zsh-autocomplete-plugin
-frodenas/bosh-zsh-autocomplete-plugin
-mafredri/zsh-async
-sindresorhus/pure
-zsh-users/zsh-completions src
-zsh-users/zsh-syntax-highlighting
-EOBUNDLES
-unalias alias
+    alias alias=true
+    antibody bundle <<-EOBUNDLES
+	frodenas/cf-zsh-autocomplete-plugin
+	frodenas/bosh-zsh-autocomplete-plugin
+	mafredri/zsh-async
+	sindresorhus/pure
+	zsh-users/zsh-completions src
+	zsh-users/zsh-syntax-highlighting
+	EOBUNDLES
+    unalias alias
 
-autoload -U compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C "$HOME/bin/vault" vault
+    autoload -U compinit && compinit
+    autoload -U +X bashcompinit && bashcompinit
+    complete -o nospace -C "$HOME/bin/vault" vault
+else
+    echo 'Consider installing Antibody: https://getantibody.github.io'
+fi
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
