@@ -15,3 +15,7 @@ ln -sf "$workspace/.vim"
 "~/.tmux/plugins/tpm/bin/install_plugins"
 vim -c PlugInstall -c quitall
 ```
+
+## Appearance
+
+https://github.com/blinksh/themes/blob/master/themes/Tomorrow%20Night.js
