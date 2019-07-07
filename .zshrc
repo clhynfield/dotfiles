@@ -1,5 +1,6 @@
 PATH=\
 ~/bin:/usr/local/bin:/opt/bin:/usr/bin:/bin:\
+~/go/bin:/opt/go/bin:\
 /usr/local/sbin:/usr/sbin:/sbin
 export PATH
 
