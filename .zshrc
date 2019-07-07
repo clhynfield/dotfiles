@@ -1,8 +1,5 @@
 PATH=\
-~/bin:/usr/local/bin:/usr/xpg4/bin:/usr/bin:/bin:\
-/usr/ucb:/usr/ccs/bin:/usr/contrib/bin:/usr/games:\
-/usr/bin/X11:/usr/openwin/bin\
-/opt/bin:\
+~/bin:/usr/local/bin:/opt/bin:/usr/bin:/bin:\
 /usr/local/sbin:/usr/sbin:/sbin
 export PATH
 
