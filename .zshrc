@@ -36,6 +36,7 @@ if (($+commands[antibody])); then
 	sindresorhus/pure
 	zsh-users/zsh-completions src
 	zsh-users/zsh-syntax-highlighting
+	littleq0903/gcloud-zsh-completion kind:fpath path:src
 	EOBUNDLES
     unalias alias
 
