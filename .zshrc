@@ -71,7 +71,9 @@ export CLICOLOR='true'
 
 SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
 WINDOW_TITLE='\033]2;%m:%1~\007'
-precmd () print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
+precmd() {
+    print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
+}
 
 if (($+commands[direnv])); then
     eval "$(direnv hook zsh)"
