@@ -69,11 +69,10 @@ setopt transient_rprompt
 export LSCOLORS='Exfxcxdxbxegedabagacad'
 export CLICOLOR='true'
 
-SCREEN_TITLE="${WINDOW:+\033k%m:%1~\033\\\\}"
-WINDOW_TITLE='\033]2;%m:%1~\007'
-precmd() {
-    print -n -P "$WINDOW_TITLE$SCREEN_TITLE"
-}
+zstyle :prompt:pure:prompt:success color green
+zstyle :prompt:pure:user color 237
+zstyle :prompt:pure:host color 237
+zstyle :prompt:pure:git:branch color 237
 
 if (($+commands[direnv])); then
     eval "$(direnv hook zsh)"
