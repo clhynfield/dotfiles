@@ -70,6 +70,12 @@ zstyle :prompt:pure:user color 237
 zstyle :prompt:pure:host color 237
 zstyle :prompt:pure:git:branch color 237
 
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+elif [[ "${OSTYPE#linux}" != "$OSTYPE" ]]; then
+    echo 'Consider installing Homebrew: https://docs.brew.sh/Homebrew-on-Linux'
+fi
+
 if (($+commands[direnv])); then
     eval "$(direnv hook zsh)"
 else
