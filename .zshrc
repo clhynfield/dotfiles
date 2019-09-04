@@ -39,10 +39,6 @@ if (($+commands[antibody])); then
 	littleq0903/gcloud-zsh-completion kind:fpath path:src
 	EOBUNDLES
     unalias alias
-
-    autoload -U compinit && compinit
-    autoload -U +X bashcompinit && bashcompinit
-    complete -o nospace -C "$HOME/bin/vault" vault
 else
     echo 'Consider installing Antibody: https://getantibody.github.io'
 fi
@@ -95,6 +91,15 @@ if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
     export NVM_DIR="$HOME/.nvm"
     alias nvm='unalias nvm; source "/usr/local/opt/nvm/nvm.sh"; nvm'
 fi
+
+autoload -Uz compinit
+if [[ -n ~/.zcompdump*(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C "$HOME/bin/vault" vault
 
 : ${VISUAL:=vim}
 export VISUAL
