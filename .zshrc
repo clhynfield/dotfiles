@@ -33,7 +33,7 @@ if (($+commands[antibody])); then
 	frodenas/cf-zsh-autocomplete-plugin
 	frodenas/bosh-zsh-autocomplete-plugin
 	mafredri/zsh-async
-	sindresorhus/pure
+	clhynfield/pure
 	zsh-users/zsh-completions src
 	zsh-users/zsh-syntax-highlighting
 	littleq0903/gcloud-zsh-completion kind:fpath path:src
