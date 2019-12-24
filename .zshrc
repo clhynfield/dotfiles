@@ -47,7 +47,7 @@ STRFTIME='%Y-%m-%dT%H:%M:%S%z'
 
 : ${HISTFILE:=$HOME/.zsh_history}
 HISTSIZE=10000
-SAVEHIST=1000
+SAVEHIST=10000
 setopt appendhistory notify
 setopt extended_history
 
