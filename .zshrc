@@ -23,6 +23,12 @@ export LC_TYPE
 
 [ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
 
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+elif [[ "${OSTYPE#linux}" != "$OSTYPE" ]]; then
+    echo 'Consider installing Homebrew: https://docs.brew.sh/Homebrew-on-Linux'
+fi
+
 if [[ -r "$HOME/.profile_local" ]]; then source "$HOME/.profile_local"; fi
 
 if (($+commands[antibody])); then
@@ -69,12 +75,6 @@ zstyle :prompt:pure:prompt:success color green
 zstyle :prompt:pure:user color 237
 zstyle :prompt:pure:host color 237
 zstyle :prompt:pure:git:branch color 237
-
-if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-elif [[ "${OSTYPE#linux}" != "$OSTYPE" ]]; then
-    echo 'Consider installing Homebrew: https://docs.brew.sh/Homebrew-on-Linux'
-fi
 
 if (($+commands[direnv])); then
     eval "$(direnv hook zsh)"
