@@ -29,11 +29,7 @@ else
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 fi
 
-if [ "$OSTYPE" == 'darwin' ]; then
-    brew install getantibody/tap/antibody
-else
-    curl -sL git.io/antibody | sh -s
-fi
+brew install getantibody/tap/antibody
 
 if [ "$OSTYPE" == 'darwin' ]; then
     brew install direnv
