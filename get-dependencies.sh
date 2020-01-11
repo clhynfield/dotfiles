@@ -31,9 +31,4 @@ fi
 
 brew install getantibody/tap/antibody
 
-if [ "$OSTYPE" == 'darwin' ]; then
-    brew install direnv
-elif [ "$ID" == 'debian' ] || [ "$ID_LIKE" == 'debian' ]; then
-    with_privilege apt-get install -y direnv
-fi
-
+brew install direnv
