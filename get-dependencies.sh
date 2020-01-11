@@ -23,6 +23,10 @@ if [ "$ID" == 'debian' ] || [ "$ID_LIKE" == 'debian' ]; then
         libncurses5-dev
 fi
 
+if [ "$OSTYPE" == 'darwin' ]; then # Install Homebrew
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
 if [ "$OSTYPE" == 'darwin' ]; then
     brew install getantibody/tap/antibody
 else
