@@ -14,7 +14,13 @@ function with_privilege() {
 
 if [ "$ID" == 'debian' ] || [ "$ID_LIKE" == 'debian' ]; then
     with_privilege apt-get update
-    with_privilege apt-get install -y sudo automake build-essential pkg-config libevent-dev libncurses5-dev
+    with_privilege apt-get install -y \
+        sudo \
+        automake \
+        build-essential \
+        pkg-config \
+        libevent-dev \
+        libncurses5-dev
 fi
 
 if [ "$OSTYPE" == 'darwin' ]; then
@@ -28,5 +34,4 @@ if [ "$OSTYPE" == 'darwin' ]; then
 elif [ "$ID" == 'debian' ] || [ "$ID_LIKE" == 'debian' ]; then
     with_privilege apt-get install -y direnv
 fi
-
 
