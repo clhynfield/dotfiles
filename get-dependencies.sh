@@ -25,6 +25,8 @@ fi
 
 if [ "$OSTYPE" == 'darwin' ]; then # Install Homebrew
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 fi
 
 if [ "$OSTYPE" == 'darwin' ]; then
