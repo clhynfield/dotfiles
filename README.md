@@ -2,8 +2,8 @@
 
 placeholder
 
-```
-workspace="~/workspace"
+```shell
+workspace="${HOME}/workspace"
 mkdir -p "$workspace" && cd "$workspace"
 git clone --recursive https://github.com/clhynfield/dotfiles.git
 cd
