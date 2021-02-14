@@ -23,7 +23,9 @@ export LC_TYPE
 
 [ ! -z "$CLH_SHELLRC_LOADED" ] && return # Already sourced this file, no need to do it again.
 
-if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+    eval $(/opt/homebrew/bin/brew shellenv)
+elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
     eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 elif [[ "${OSTYPE#linux}" != "$OSTYPE" ]]; then
     echo 'Consider installing Homebrew: https://docs.brew.sh/Homebrew-on-Linux'
