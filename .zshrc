@@ -95,6 +95,9 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     export SDKMAN_DIR="$HOME/.sdkman"
     alias sdkman='unalias sdkman; source "$HOME/.sdkman/bin/sdkman-init.sh"; sdkman'
 fi
+if (($+commands[nodenv])); then
+    alias nodenv='unalias nodenv; eval "$(nodenv init -)"; nodenv'
+fi
 if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
     export NVM_DIR="$HOME/.nvm"
     alias nvm='unalias nvm; source "/usr/local/opt/nvm/nvm.sh"; nvm'
