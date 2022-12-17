@@ -44,11 +44,24 @@ if (($+commands[antibody])); then
 	clhynfield/pure
 	zsh-users/zsh-completions src
 	zsh-users/zsh-syntax-highlighting
-	littleq0903/gcloud-zsh-completion kind:fpath path:src
+	EOBUNDLES
+    unalias alias
+elif [ -f "${HOME}/.zgenom/zgenom.zsh" ]; then
+    source "${HOME}/.zgenom/zgenom.zsh"
+
+    alias alias=true
+    zgenom loadall <<-EOBUNDLES
+	frodenas/cf-zsh-autocomplete-plugin
+	frodenas/bosh-zsh-autocomplete-plugin
+	mafredri/zsh-async
+	clhynfield/pure
+	zsh-users/zsh-completions src
+	zsh-users/zsh-syntax-highlighting
 	EOBUNDLES
     unalias alias
 else
     echo 'Consider installing Antibody: https://getantibody.github.io'
+    echo 'or zgenom: https://github.com/jandamm/zgenom'
 fi
 
 STRFTIME='%Y-%m-%dT%H:%M:%S%z'
@@ -96,7 +109,7 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     alias sdkman='unalias sdkman; source "$HOME/.sdkman/bin/sdkman-init.sh"; sdkman'
 fi
 if (($+commands[nodenv])); then
-    alias nodenv='unalias nodenv; eval "$(nodenv init -)"; nodenv'
+    alias nodenv='unalias nodenv; eval "$($commands[nodenv] init -)"; nodenv'
 fi
 if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
     export NVM_DIR="$HOME/.nvm"
