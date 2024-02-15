@@ -124,8 +124,10 @@ else
 fi
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C "$HOME/bin/vault" vault
+complete -o nospace -C /opt/homebrew/bin/aws_completer aws
 
 : ${VISUAL:=vim}
 export VISUAL
 
 CLH_SHELLRC_LOADED=yes
+
