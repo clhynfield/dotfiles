@@ -58,6 +58,7 @@ elif [ -f "${HOME}/.zgenom/zgenom.zsh" ]; then
 	clhynfield/pure
 	zsh-users/zsh-completions src
 	zsh-users/zsh-syntax-highlighting
+	chisui/zsh-nix-shell
 	EOBUNDLES
     unalias alias
 else
