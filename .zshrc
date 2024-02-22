@@ -1,7 +1,8 @@
 PATH=\
 ~/bin:/usr/local/bin:/opt/bin:/usr/bin:/bin:\
 ~/go/bin:/opt/go/bin:\
-/usr/local/sbin:/usr/sbin:/sbin
+/usr/local/sbin:/usr/sbin:/sbin:\
+"$PATH"
 export PATH
 
 MANPATH=\
