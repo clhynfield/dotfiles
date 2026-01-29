@@ -111,6 +111,9 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     export SDKMAN_DIR="$HOME/.sdkman"
     alias sdkman='unalias sdkman; source "$HOME/.sdkman/bin/sdkman-init.sh"; sdkman'
 fi
+if (($+commands[fnm])); then
+    alias nodenv='unalias fnm; eval "$($commands[fnm] env --use-on-cd)"; fnm'
+fi
 if (($+commands[nodenv])); then
     alias nodenv='unalias nodenv; eval "$($commands[nodenv] init -)"; nodenv'
 fi
@@ -133,4 +136,3 @@ complete -o nospace -C /opt/homebrew/bin/aws_completer aws
 export VISUAL
 
 CLH_SHELLRC_LOADED=yes
-
