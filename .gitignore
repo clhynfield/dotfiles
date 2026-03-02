@@ -4,3 +4,4 @@
 .tmux/plugins/*
 .ssh/google_compute_*
 /.gtm/
+.ssh/allowed_signers
