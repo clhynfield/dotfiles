@@ -1,5 +1,10 @@
 # Clayton Hynfield's dotfiles
 
+## TODO
+
+- [ ] Add GNU Stow
+- [ ] Add Git signing
+
 placeholder
 
 ```shell
@@ -18,3 +23,4 @@ vim -c PlugInstall -c quitall
 ## Appearance
 
 https://github.com/blinksh/themes/blob/master/themes/Tomorrow%20Night.js
+echo "$(git config --get user.email) namespaces=\"git\" $(ssh-add -L)" >> ~/.ssh/allowed_signers
