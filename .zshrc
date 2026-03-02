@@ -100,6 +100,9 @@ else
     echo 'Consider installing direnv: https://direnv.net'
 fi
 
+if [ -f "$HOME/.local/bin/env" ]; then
+    source $HOME/.local/bin/env
+fi
 if (($+commands[rbenv])); then
     alias rbenv='unalias rbenv; eval "$(rbenv init -)"; rbenv'
 fi
