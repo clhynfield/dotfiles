@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 if [ -r '/etc/os-release' ]; then
     source '/etc/os-release'
 fi
@@ -25,6 +27,7 @@ fi
 
 if [ "$OSTYPE" == 'darwin' ]; then # Install Homebrew
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    ln -sf "$DOTFILES_DIR/.gitconfig.mac" ~/.gitconfig.local
 else
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 fi

@@ -1,6 +1,18 @@
+[commit]
+  gpgsign = true
 [user]
-	name = Clayton Hynfield
-	email = clayton@hynfield.org
+  name = Clayton Hynfield
+  email = clayton@hynfield.org
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP749k7KZTND1UPLEZP5sisoMt+2OYcXKcUyCFAOAzOB
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  allowedSignersFile = ~/.ssh/allowed_signers
+
+[include]
+  path = ~/.gitconfig.local
 
 [alias]
     lg = lg2
@@ -11,4 +23,3 @@
     lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
     lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
     lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
-
